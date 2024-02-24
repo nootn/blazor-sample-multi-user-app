@@ -1,6 +1,6 @@
-﻿@page "/auth"
-
+﻿@attribute [Route(Navigation.Url.Auth)]
 @using Microsoft.AspNetCore.Authorization
+@using BlazorMultiUser.Shared
 
 @attribute [Authorize]
 @rendermode InteractiveAuto

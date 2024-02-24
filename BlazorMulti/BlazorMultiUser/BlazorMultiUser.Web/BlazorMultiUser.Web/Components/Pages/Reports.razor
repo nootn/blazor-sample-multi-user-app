@@ -1,0 +1,93 @@
+﻿@attribute [Route(Navigation.Url.Reports)]
+@attribute [StreamRendering]
+@using BlazorMultiUser.Shared
+@using BlazorMultiUser.Web.Data
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+
+<PageTitle>Reports</PageTitle>
+
+<h1>Reports</h1>
+
+<p>This shows some reports, streamed from the server. You will see different things depending on who you are.</p>
+
+<p>
+    Groups:
+    @if (_groupsCount.HasValue)
+    {
+        @_groupsCount.Value
+    }
+    else
+    {
+        <em>Loading...</em>
+    }
+</p>
+
+<p>
+    Tasks:
+    @if (_tasksCount.HasValue)
+    {
+        @_tasksCount.Value
+    }
+    else
+    {
+        <em>Loading...</em>
+    }
+</p>
+
+@if (!string.IsNullOrWhiteSpace(_status))
+{
+    <p>@_status</p>
+}
+
+@code {
+    private int? _groupsCount;
+    private int? _tasksCount;
+    private string _status = "Loading..";
+    private CancellationTokenSource cts = new CancellationTokenSource();
+
+
+    private static readonly ThreadLocal<Random> ThreadLocalRandom = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+
+    protected override async Task OnInitializedAsync()
+    {
+        _ = CheckTasksPeriodically(cts.Token);
+
+        _groupsCount = await GetGroups();
+        _tasksCount = await GetTasks();
+
+        await cts.CancelAsync();
+        _status = "";
+    }
+
+    private async Task CheckTasksPeriodically(CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            await Task.Delay(1000, cancellationToken); // Adjust the delay as needed.
+            _status += ".";
+            StateHasChanged();
+        }
+    }
+
+    private async Task<T> SimulateDelay<T>(Func<Task<T>> toPerform)
+    {
+        var delaySeconds = ThreadLocalRandom.Value!.Next(1, 10);
+        await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+        return await toPerform();
+    }
+
+    private async Task<int> GetGroups()
+    {
+        var result = await SimulateDelay(async () => await DbContext.Groups.CountAsync());
+        return result;
+    }
+
+    private async Task<int> GetTasks()
+    {
+        var result = await SimulateDelay(async () => await DbContext.TasksToDo.CountAsync());
+        return result;
+    }
+
+}

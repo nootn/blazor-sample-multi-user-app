@@ -1,6 +1,6 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using BlazorMultiUser.Web.Data
-
+﻿@using BlazorMultiUser.Web.Data
+@using Microsoft.AspNetCore.Identity
+@using Task = System.Threading.Tasks.Task
 @inject SignInManager<ApplicationUser> SignInManager
 
 <ul class="nav nav-pills flex-column">
@@ -34,4 +34,5 @@
     {
         hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
     }
+
 }
