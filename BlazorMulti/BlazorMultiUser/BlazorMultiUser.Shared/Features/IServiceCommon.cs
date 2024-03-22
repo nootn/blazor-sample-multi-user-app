@@ -2,4 +2,5 @@
 
 public interface IServiceCommon
 {
+    bool IsServerSide { get; }
 }

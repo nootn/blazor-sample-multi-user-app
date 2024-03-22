@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using BlazorMultiUser.Shared.Infrastructure;
 using BlazorMultiUser.Web.Client;
 using BlazorMultiUser.Web.Client.Infrastructure;
@@ -20,6 +21,6 @@ builder.Services.AddScoped<HttpClient>(sp =>
 
 builder.Services.UseSharedClientSide();
 
-
+builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();

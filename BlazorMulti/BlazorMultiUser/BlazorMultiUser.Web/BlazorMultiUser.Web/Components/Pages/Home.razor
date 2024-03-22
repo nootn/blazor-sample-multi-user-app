@@ -1,9 +1,34 @@
 ﻿@attribute [Route(Navigation.Url.Home)]
 @using BlazorMultiUser.Shared
+@using BlazorMultiUser.Shared.Infrastructure
+@inject IAppContextService AppContextService
 
 <PageTitle>Home</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    @(_isServerSideRender ? "Server Rendered" : "Client Rendered")
+</div>
 
 <h1>Welcome!</h1>
 
 <p>This is Blazor web app intended for live demos by <a href="https:///about.me/nootn" title="Link to about page" target="_blank">Newt</a> as part of the <a href="https://www.sixpivot.com.au/speakers/andrew-newton" title="Link to SixPivot speaker page" target="_blank">Blazor Deep Dive – State, Rendering, Testing and more</a> talk.</p>
 <p>If you are here on your own, good luck and have fun!</p>
+
+
+
+@code
+{
+    private bool _isServerSideRender = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _isServerSideRender = AppContextService.IsServerSideRender;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        _isServerSideRender = AppContextService.IsServerSideRender;
+    }
+}

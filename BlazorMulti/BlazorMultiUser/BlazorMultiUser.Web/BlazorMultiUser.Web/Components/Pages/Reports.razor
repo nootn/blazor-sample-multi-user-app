@@ -1,12 +1,18 @@
 ﻿@attribute [Route(Navigation.Url.Reports)]
 @attribute [StreamRendering]
 @using BlazorMultiUser.Shared
+@using BlazorMultiUser.Shared.Infrastructure
 @using BlazorMultiUser.Web.Data
 @using Microsoft.CodeAnalysis.CSharp.Syntax
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext DbContext
+@inject IAppContextService AppContextService
 
 <PageTitle>Reports</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    @(_isServerSideRender ? "Server Rendered" : "Client Rendered")
+</div>
 
 <h1>Reports</h1>
 
@@ -46,7 +52,13 @@
     private int? _tasksCount;
     private string _status = "Still Loading..";
     private CancellationTokenSource cts = new CancellationTokenSource();
+    private bool _isServerSideRender = true;
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _isServerSideRender = AppContextService.IsServerSideRender;
+    }
 
     private static readonly ThreadLocal<Random> ThreadLocalRandom = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
 

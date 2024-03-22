@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using BlazorMultiUser.Shared.Features.GroupsAndTasks;
 using BlazorMultiUser.Shared.Infrastructure;
 using BlazorMultiUser.Web.Components;
@@ -43,6 +44,9 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.UseSharedServerSide();
+
+// Only works client side, but for pre-rendering need this https://github.com/Blazored/LocalStorage?tab=readme-ov-file#usage-blazor-server
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 

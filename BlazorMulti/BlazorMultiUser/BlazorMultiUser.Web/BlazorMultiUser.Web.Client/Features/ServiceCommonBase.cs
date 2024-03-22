@@ -4,5 +4,5 @@ namespace BlazorMultiUser.Web.Client.Features;
 
 public abstract class ServiceCommonBase : IServiceCommon
 {
-    public bool IsClientSide => true;
+    public bool IsServerSide => false;
 }

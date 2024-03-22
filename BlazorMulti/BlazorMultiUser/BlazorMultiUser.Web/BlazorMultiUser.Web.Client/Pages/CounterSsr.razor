@@ -1,0 +1,55 @@
+﻿@page "/counter-ssr"
+@using BlazorMultiUser.Shared.Infrastructure
+@rendermode InteractiveAuto
+@inject IAppContextService AppContextService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<PageTitle>Counter</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    @(_isServerSideRender ? "Server Rendered" : "Client Rendered")
+</div>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @_currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Increment count</button>
+<button class="btn btn-danger" @onclick="ClearCount">Clear count</button>
+
+@code {
+    private int _currentCount;
+    private bool _isServerSideRender = true;
+
+    private const string LocalStorageKey = "currentCount";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _isServerSideRender = AppContextService.IsServerSideRender;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        _isServerSideRender = AppContextService.IsServerSideRender;
+        if (firstRender)
+        {
+            _currentCount = await LocalStorage.GetItemAsync<int>(LocalStorageKey);
+            StateHasChanged();
+        }
+        
+    }
+
+    private async Task IncrementCount()
+    {
+        _currentCount++;
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCount);
+    }
+
+    private async Task ClearCount()
+    {
+        _currentCount = 0;
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCount);
+    }
+}
