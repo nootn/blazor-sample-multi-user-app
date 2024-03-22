@@ -37,5 +37,6 @@ public static class Navigation
         public const string Error = "/Error";
         public const string Home = "/";
         public const string Reports = "/reports";
+        public const string GroupTasksServer = "/group-tasks/server";
     }
 }

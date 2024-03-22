@@ -38,13 +38,13 @@
 
 @if (!string.IsNullOrWhiteSpace(_status))
 {
-    <p>@_status</p>
+    <p><em>@_status</em></p>
 }
 
 @code {
     private int? _groupsCount;
     private int? _tasksCount;
-    private string _status = "Loading..";
+    private string _status = "Still Loading..";
     private CancellationTokenSource cts = new CancellationTokenSource();
 
 
@@ -65,7 +65,7 @@
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            await Task.Delay(1000, cancellationToken); // Adjust the delay as needed.
+            await Task.Delay(1000, cancellationToken);
             _status += ".";
             StateHasChanged();
         }

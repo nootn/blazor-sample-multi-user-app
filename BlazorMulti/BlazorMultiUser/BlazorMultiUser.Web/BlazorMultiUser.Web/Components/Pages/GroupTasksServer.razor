@@ -1,0 +1,106 @@
+﻿@using BlazorMultiUser.Shared
+@using BlazorMultiUser.Shared.Features.GroupsAndTasks
+@using BlazorMultiUser.Shared.Features.GroupsAndTasks.Dto
+@using BlazorMultiUser.Shared.Infrastructure
+@using Microsoft.AspNetCore.Http.HttpResults
+@attribute [Route(Navigation.Url.GroupTasksServer)]
+@inject ILogger<GroupTasksServer> Logger
+@inject IGroupsAndTasksReaderService GroupTasksReaderService
+@inject IGroupsAndTasksWriterService GroupTaskWriterService
+
+<PageTitle>Group Tasks - Server Only</PageTitle>
+
+<h1>Groups</h1>
+
+@if (_groups == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @if (!_groups.Any())
+    {
+        <p>No groups exist!</p>
+    }
+    @foreach (var group in _groups)
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <h4>@group.Name</h4>
+                <pre>@group.GroupId</pre>
+                <hr />
+            </div>
+        </div>
+    }
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <section>
+@*             <AuthorizeView>
+                <Authorized>
+                    <StatusMessage Message="@createGroupErrorMessage" />
+                    <EditForm Model="CreateGroupRequestModel" method="post" OnValidSubmit="CreateGroup" FormName="create-group">
+                        <DataAnnotationsValidator />
+                        <h2>Create Group</h2>
+                        <hr />
+                        <ValidationSummary class="text-danger" role="alert" />
+                        <div class="form-floating mb-3">
+                            <InputText @bind-Value="CreateGroupRequestModel.Name" class="form-control" aria-required="true" />
+                            <label for="name" class="form-label">Name</label>
+                            <ValidationMessage For="() => CreateGroupRequestModel.Name" class="text-danger" />
+                        </div>
+                        <div>
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">Create Group</button>
+                        </div>
+                    </EditForm>
+                </Authorized>
+                <NotAuthorized>
+                    <p>
+                        You are not authorized to create a group. Please log in and try again.
+                    </p>
+                    <button disabled="disabled" type="reset" class="w-100 btn btn-lg btn-primary">Create Group</button>
+                </NotAuthorized>
+            </AuthorizeView> *@
+
+        </section>
+    </div>
+</div>
+
+@code
+{
+    private string createGroupErrorMessage = "";
+
+    private IEnumerable<GroupCoreDto>? _groups;
+
+    [SupplyParameterFromForm] 
+    private CreateGroupRequest CreateGroupRequestModel { get; set; } = new()
+    {
+        Name = ""
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        _groups = await GroupTasksReaderService.GetAllGroups();
+    }
+
+    public async Task CreateGroup()
+    {
+        createGroupErrorMessage = "";
+        var res = await GroupTaskWriterService.CreateGroup(CreateGroupRequestModel);
+        if (res is Result<CreateGroupRequest>.Success)
+        {
+            _groups = await GroupTasksReaderService.GetAllGroups();
+        }
+        else if (res is Result<CreateGroupRequest>.Invalid failure)
+        {
+            createGroupErrorMessage = string.Join("; ", failure.Errors.SelectMany(e => e.Value));
+        }
+        else
+        {
+            createGroupErrorMessage = "Unexpected error creating group - please try again";
+        }
+    }
+
+}

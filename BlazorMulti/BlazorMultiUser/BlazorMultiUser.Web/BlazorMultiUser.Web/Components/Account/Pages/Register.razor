@@ -58,8 +58,10 @@
 @code {
     private IEnumerable<IdentityError>? identityErrors;
 
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";

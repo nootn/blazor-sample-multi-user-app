@@ -37,6 +37,7 @@
 @code {
     private string? message;
 
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
     private async Task OnValidSubmitAsync()

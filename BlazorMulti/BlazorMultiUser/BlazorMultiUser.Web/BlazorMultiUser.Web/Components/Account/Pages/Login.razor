@@ -70,8 +70,10 @@
 
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()

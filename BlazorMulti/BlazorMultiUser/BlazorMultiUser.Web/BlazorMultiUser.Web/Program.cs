@@ -1,6 +1,9 @@
+using BlazorMultiUser.Shared.Features.GroupsAndTasks;
+using BlazorMultiUser.Shared.Infrastructure;
 using BlazorMultiUser.Web.Components;
 using BlazorMultiUser.Web.Components.Account;
 using BlazorMultiUser.Web.Data;
+using BlazorMultiUser.Web.Features.GroupsAndTasks;
 using BlazorMultiUser.Web.Infrastructure.Ioc;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;

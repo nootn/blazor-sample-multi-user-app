@@ -78,6 +78,7 @@ else
 
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
