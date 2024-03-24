@@ -40,6 +40,7 @@ public static class Navigation
         public const string CounterClientSsr = "/counter-client-ssr";
         public const string CounterDatabaseDefault = "/counter-database-default";
         public const string CounterDatabasePersist = "/counter-database-persist";
+        public const string CounterFluxor = "/counter-fluxor";
         public const string Reports = "/reports";
         public const string GroupTasksServer = "/group-tasks/server";
     }

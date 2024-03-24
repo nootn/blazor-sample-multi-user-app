@@ -33,13 +33,11 @@
     private int _currentCountLocal;
     private bool _isServerSideRender = true;
 
-    private const string LocalStorageKey = "currentCount";
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         _isServerSideRender = AppContextService.IsServerSideRender;
-        _currentCountLocal = await LocalStorage.GetItemAsync<int>(LocalStorageKey);
+        _currentCountLocal = await LocalStorage.GetItemAsync<int>(ClientCounterState.LocalStorageKey);
     }
 
     private async Task IncrementCounts()
@@ -47,7 +45,7 @@
         _currentCountPage++;
         ClientCounterState.Count++;
         _currentCountLocal++;
-        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
+        await LocalStorage.SetItemAsync(ClientCounterState.LocalStorageKey, _currentCountLocal);
     }
 
     private async Task ClearCounts()
@@ -55,11 +53,11 @@
         _currentCountPage = 0;
         ClientCounterState.Count = 0;
         _currentCountLocal = 0;
-        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
+        await LocalStorage.SetItemAsync(ClientCounterState.LocalStorageKey, _currentCountLocal);
     }
 
     private async Task SetCurrentLocalFromSlider()
     {
-        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
+        await LocalStorage.SetItemAsync(ClientCounterState.LocalStorageKey, _currentCountLocal);
     }
 }

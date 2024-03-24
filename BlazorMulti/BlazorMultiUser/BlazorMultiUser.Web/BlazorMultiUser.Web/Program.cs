@@ -1,8 +1,13 @@
 using Blazored.LocalStorage;
+using BlazorMultiUser.Web;
+using BlazorMultiUser.Web.Client;
+using BlazorMultiUser.Web.Client.Infrastructure.Fluxor;
 using BlazorMultiUser.Web.Components;
 using BlazorMultiUser.Web.Components.Account;
 using BlazorMultiUser.Web.Data;
 using BlazorMultiUser.Web.Infrastructure.Ioc;
+using Fluxor;
+using Fluxor.Blazor.Web.ReduxDevTools;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +51,16 @@ builder.Services.UseSharedServerSide();
 
 // Only works client side, but for pre-rendering need this https://github.com/Blazored/LocalStorage?tab=readme-ov-file#usage-blazor-server
 builder.Services.AddBlazoredLocalStorage();
+
+//Fluxor
+builder.Services.AddFluxor(options =>
+{
+    options.ScanAssemblies(typeof(AssemblyMarkerServer).Assembly, typeof(AssemblyMarkerClient).Assembly)
+        .AddMiddleware<FluxorLoggingMiddleware>();
+#if DEBUG
+    //options.UseReduxDevTools();
+#endif
+});
 
 var app = builder.Build();
 

@@ -1,0 +1,73 @@
+﻿@attribute [Route(Navigation.Url.CounterFluxor)]
+@rendermode InteractiveAuto
+@using BlazorMultiUser.Web.Client.Features.Counter.State
+@using Fluxor
+@using BlazorMultiUser.Web.Client.Features.Counter.Components
+@using BlazorMultiUser.Shared
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@inject IState<CounterGlobalState> State
+@inject IDispatcher Dispatcher
+
+<PageTitle>Counter Fluxor</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    @(State.Value.IsServerSideRender ? "Server Rendered" : "Client Rendered")
+</div>
+
+<h1>Counter SSR</h1>
+
+<p role="status">Current count (app instance): @State.Value.AppInstanceCounter</p>
+<p>
+    <CounterSlider Value="@State.Value.AppInstanceCounter"
+                   ValueChanged="() => Dispatcher.Dispatch(new CounterGlobalActions.UpdateAppInstanceCounter(State.Value.AppInstanceCounter + 1))"
+                   Disabled="@(State.Value.IsServerSideRender || State.Value.IsLoading)"
+                   Debounce="false"/>
+</p>
+
+<p role="status">Current count (local storage): @State.Value.LocalStorageCounter</p>
+<p>
+    <CounterSlider Value="@State.Value.LocalStorageCounter"
+                   ValueChanged="() => Dispatcher.Dispatch(new CounterGlobalActions.UpdateLocalStorageCounter(State.Value.LocalStorageCounter + 1))"
+                   Disabled="@(State.Value.IsServerSideRender || State.Value.IsLoading)"
+                   Debounce="true"/>
+</p>
+
+<p role="status">Current count (database): @State.Value.DatabaseCounter</p>
+<p>
+    @if (State.Value.DatabaseCounter == null)
+    {
+        <p>You must be logged in to see this counter</p>
+        <a href="@Navigation.Url.AccountLogin" class="btn btn-primary">Login</a>
+    }
+    else
+    {
+        <CounterSlider Value="@State.Value.DatabaseCounter.Value"
+                       ValueChanged="() => Dispatcher.Dispatch(new CounterGlobalActions.UpdateDatabaseCounter(State.Value.DatabaseCounter.Value + 1))"
+                       Disabled="@(State.Value.IsServerSideRender || State.Value.IsLoading)"
+                       Debounce="true"/>
+    }
+
+</p>
+
+<button class="btn btn-primary" @onclick="IncrementCounts">Increment counts</button>
+<button class="btn btn-danger" @onclick="ClearCounts">Clear counts</button>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Dispatcher.Dispatch(new CounterGlobalActions.Initialize(State.Value));
+    }
+
+    private void IncrementCounts()
+    {
+        Dispatcher.Dispatch(new CounterGlobalActions.UpdateAllCounters(State.Value.AppInstanceCounter + 1, State.Value.LocalStorageCounter + 1, State.Value.DatabaseCounter == null ? null : State.Value.DatabaseCounter.Value + 1));
+    }
+
+    private void ClearCounts()
+    {
+        Dispatcher.Dispatch(new CounterGlobalActions.UpdateAllCounters(0, 0, 0));
+    }
+
+}

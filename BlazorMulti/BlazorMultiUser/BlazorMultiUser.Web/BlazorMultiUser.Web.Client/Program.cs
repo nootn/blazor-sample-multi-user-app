@@ -1,8 +1,9 @@
 using Blazored.LocalStorage;
-using BlazorMultiUser.Shared.Infrastructure;
 using BlazorMultiUser.Web.Client;
-using BlazorMultiUser.Web.Client.Infrastructure;
+using BlazorMultiUser.Web.Client.Infrastructure.Fluxor;
 using BlazorMultiUser.Web.Client.Infrastructure.Ioc;
+using Fluxor;
+using Fluxor.Blazor.Web.ReduxDevTools;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -22,5 +23,14 @@ builder.Services.AddScoped<HttpClient>(sp =>
 builder.Services.UseSharedClientSide();
 
 builder.Services.AddBlazoredLocalStorage();
+
+//Fluxor
+builder.Services.AddFluxor(options =>
+{
+    options.ScanAssemblies(typeof(AssemblyMarkerClient).Assembly).AddMiddleware<FluxorLoggingMiddleware>();
+#if DEBUG
+    //options.UseReduxDevTools();
+#endif
+});
 
 await builder.Build().RunAsync();
