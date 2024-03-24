@@ -10,11 +10,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="WebClient\Features\Counter\ComponentTests\DefaultValueWhenDebounceRendersInstantly.html" />
+    <None Remove="WebClient\Features\Counter\ComponentTests\DefaultValueWhenNoDebounceRendersInstantly.html" />
+    <None Remove="WebClient\Features\Counter\ComponentTests\DIsabledRendersCorrectly.html" />
+    <None Remove="WebClient\Features\Counter\ComponentTests\NoParametersRendersCorrectly.html" />
+    <None Remove="WebClient\Features\Counter\ComponentTests\ValueChangeWhenDebounceRendersAfterInterval.html" />
+    <None Remove="WebClient\Features\Counter\ComponentTests\ValueChangeWhenNoDebounceRendersInstantly.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="WebClient\Features\Counter\ComponentTests\ValueChangeWhenDebounceRendersAfterInterval.html" />
+    <EmbeddedResource Include="WebClient\Features\Counter\ComponentTests\ValueChangeWhenNoDebounceRendersInstantly.html" />
+    <EmbeddedResource Include="WebClient\Features\Counter\ComponentTests\DefaultValueWhenDebounceRendersInstantly.html" />
+    <EmbeddedResource Include="WebClient\Features\Counter\ComponentTests\DisabledRendersCorrectly.html" />
+    <EmbeddedResource Include="WebClient\Features\Counter\ComponentTests\DefaultValueWhenNoDebounceRendersInstantly.html" />
+    <EmbeddedResource Include="WebClient\Features\Counter\ComponentTests\NoParametersRendersCorrectly.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bunit" Version="1.27.17" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.0.0-Beta2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorMultiUser.Web\BlazorMultiUser.Web.Client\BlazorMultiUser.Web.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>

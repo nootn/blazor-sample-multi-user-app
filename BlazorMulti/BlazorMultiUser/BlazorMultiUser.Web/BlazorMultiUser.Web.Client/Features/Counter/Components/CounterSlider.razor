@@ -21,13 +21,22 @@
     [Parameter] 
     public int DebounceMilliseconds { get; set; } = 1000;
 
-    private Timer _debounceTimer;
+    private Timer? _debounceTimer;
 
     private int _internalValue = 0;
+    private int? _overrideValue = null;
 
     protected override void OnParametersSet()
     {
-        _internalValue = Value;
+        //If someone tries to set the time while we are in the middle of debouncing, we will override the at the interval to what was passed in
+        if (_debounceTimer is not { Enabled: true })
+        {
+            _internalValue = Value;
+        }
+        else
+        {
+            _overrideValue = Value;
+        }
     }
 
     private async Task OnInput()
@@ -47,7 +56,15 @@
 
     private async Task OnDebouncedInput(int value)
     {
-        await ValueChanged.InvokeAsync(value);
+        if (_overrideValue != null)
+        {
+            await ValueChanged.InvokeAsync(_overrideValue.Value);
+            _overrideValue = null;
+        }
+        else
+        {
+            await ValueChanged.InvokeAsync(value);
+        }
     }
 
     private string GetColor(int value)
