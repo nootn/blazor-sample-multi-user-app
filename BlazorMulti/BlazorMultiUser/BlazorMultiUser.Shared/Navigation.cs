@@ -38,7 +38,8 @@ public static class Navigation
         public const string Home = "/";
         public const string CounterClientWasm = "/counter-client-wasm";
         public const string CounterClientSsr = "/counter-client-ssr";
-        public const string CounterDatabase = "/counter-database";
+        public const string CounterDatabaseDefault = "/counter-database-default";
+        public const string CounterDatabasePersist = "/counter-database-persist";
         public const string Reports = "/reports";
         public const string GroupTasksServer = "/group-tasks/server";
     }

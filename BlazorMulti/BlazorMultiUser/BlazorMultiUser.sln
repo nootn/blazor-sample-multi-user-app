@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DOCS", "DOCS", "{E224F72F-3
 		..\..\README.md = ..\..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMultiUser.Shared", "BlazorMultiUser.Shared\BlazorMultiUser.Shared.csproj", "{58AF8155-4017-41FE-A00D-91BDDE6CD023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorMultiUser.Shared", "BlazorMultiUser.Shared\BlazorMultiUser.Shared.csproj", "{58AF8155-4017-41FE-A00D-91BDDE6CD023}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMultiUser.Tests.Unit", "BlazorMultiUser.Tests.Unit\BlazorMultiUser.Tests.Unit.csproj", "{7C8DDF82-6701-4248-9FA6-3801838F025A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorMultiUser.Tests.Unit", "BlazorMultiUser.Tests.Unit\BlazorMultiUser.Tests.Unit.csproj", "{7C8DDF82-6701-4248-9FA6-3801838F025A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

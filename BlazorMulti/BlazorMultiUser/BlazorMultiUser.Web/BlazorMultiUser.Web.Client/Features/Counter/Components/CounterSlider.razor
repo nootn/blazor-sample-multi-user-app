@@ -1,0 +1,65 @@
+﻿@using System.Timers
+@implements IDisposable
+
+<input type="range" min="0" max="100" @bind-value="_internalValue" @bind-value:after="OnInput" disabled="@Disabled" />
+<span style="color: @GetColor(_internalValue);">@_internalValue</span>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public int Value { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter, EditorRequired]
+    public bool Disabled { get; set; }
+
+    [Parameter, EditorRequired]
+    public bool Debounce { get; set; }
+
+    [Parameter] 
+    public int DebounceMilliseconds { get; set; } = 1000;
+
+    private Timer _debounceTimer;
+
+    private int _internalValue = 0;
+
+    protected override void OnParametersSet()
+    {
+        _internalValue = Value;
+    }
+
+    private async Task OnInput()
+    {
+        if (Debounce)
+        {
+            _debounceTimer?.Stop();
+            _debounceTimer = new Timer(DebounceMilliseconds) { AutoReset = false };
+            _debounceTimer.Elapsed += async (_, _) => await OnDebouncedInput(_internalValue);
+            _debounceTimer.Start();
+        }
+        else
+        {
+            await ValueChanged.InvokeAsync(_internalValue);
+        }
+    }
+
+    private async Task OnDebouncedInput(int value)
+    {
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private string GetColor(int value)
+    {
+        var red = value * 255 / 100;
+        var green = 255 - red;
+        return $"rgb({red}, {green}, 0)";
+    }
+
+    public void Dispose()
+    {
+        _debounceTimer?.Dispose();
+    }
+
+}

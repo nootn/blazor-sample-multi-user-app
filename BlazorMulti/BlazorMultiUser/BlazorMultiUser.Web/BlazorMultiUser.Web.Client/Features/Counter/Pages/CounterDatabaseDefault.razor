@@ -1,8 +1,9 @@
-﻿@attribute [Route(Navigation.Url.CounterDatabase)]
+﻿@attribute [Route(Navigation.Url.CounterDatabaseDefault)]
 @using BlazorMultiUser.Shared.Infrastructure
 @using BlazorMultiUser.Shared
 @using BlazorMultiUser.Shared.Features.Counter
 @using BlazorMultiUser.Shared.Features.Counter.Dto
+@using BlazorMultiUser.Web.Client.Features.Counter.Components
 @rendermode InteractiveAuto
 @inject IAppContextService AppContextService
 @inject ICounterReaderService CounterReaderService
@@ -27,6 +28,7 @@
 else
 {
     <p role="status">Current count (database): @(_currentCountDatabase)</p>
+    <p><CounterSlider @bind-Value="_currentCountDatabase" @bind-Value:after="SetCurrentDatabaseFromSlider" Disabled="@(_isServerSideRender || _isLoading)" Debounce="true"></CounterSlider></p>
 
     <p>Source: @_counterDatabaseSource</p>
 
@@ -72,16 +74,6 @@ else
         _isLoading = false;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        _isServerSideRender = AppContextService.IsServerSideRender;
-        if (firstRender)
-        {
-            StateHasChanged();
-        }
-    }
-
     private async Task IncrementCounts()
     {
         _isLoading = true;
@@ -103,4 +95,16 @@ else
         }
         _isLoading = false;
     }
+
+    private async Task SetCurrentDatabaseFromSlider()
+    {
+        _isLoading = true;
+        var res = await CounterWriterService.UpdateCounterForCurrentUser(new UpdateCountRequest(_currentCountDatabase));
+        if (res is Result<UserCountDto>.Success success)
+        {
+            _currentCountDatabase = success.Value.Counter;
+        }
+        _isLoading = false;
+    }
+
 }

@@ -1,0 +1,75 @@
+﻿@attribute [Route(Navigation.Url.CounterClientSsr)]
+@using BlazorMultiUser.Shared.Infrastructure
+@using BlazorMultiUser.Shared
+@using BlazorMultiUser.Web.Client.Features.Counter
+@using BlazorMultiUser.Web.Client.Features.Counter.Components
+@rendermode InteractiveAuto
+@inject IAppContextService AppContextService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<PageTitle>Counter SSR</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    @(_isServerSideRender ? "Server Rendered" : "Client Rendered")
+</div>
+
+<h1>Counter SSR</h1>
+
+<p role="status">Current count (page): @_currentCountPage</p>
+<p><CounterSlider @bind-Value="_currentCountPage" Disabled="_isServerSideRender" Debounce="false"></CounterSlider></p>
+
+<p role="status">Current count (application): @ClientCounterState.Count</p>
+<p><CounterSlider @bind-Value="ClientCounterState.Count" Disabled="_isServerSideRender" Debounce="false"></CounterSlider></p>
+
+<p role="status">Current count (local storage): @_currentCountLocal</p>
+<p><CounterSlider @bind-Value="_currentCountLocal" @bind-Value:after="SetCurrentLocalFromSlider" Disabled="_isServerSideRender" Debounce="true"></CounterSlider></p>
+
+<button class="btn btn-primary" @onclick="IncrementCounts">Increment counts</button>
+<button class="btn btn-danger" @onclick="ClearCounts">Clear counts</button>
+
+@code {
+    private int _currentCountPage;
+    private int _currentCountLocal;
+    private bool _isServerSideRender = true;
+
+    private const string LocalStorageKey = "currentCount";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _isServerSideRender = AppContextService.IsServerSideRender;
+        //_currentCountLocal = await LocalStorage.GetItemAsync<int>(LocalStorageKey); //JS error
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            _currentCountLocal = await LocalStorage.GetItemAsync<int>(LocalStorageKey);
+            StateHasChanged();
+        }
+    }
+
+    private async Task IncrementCounts()
+    {
+        _currentCountPage++;
+        ClientCounterState.Count++;
+        _currentCountLocal++;
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
+    }
+
+    private async Task ClearCounts()
+    {
+        _currentCountPage++;
+        ClientCounterState.Count = 0;
+        _currentCountLocal++;
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
+    }
+
+    private async Task SetCurrentLocalFromSlider()
+    {
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
+    }
+
+}
