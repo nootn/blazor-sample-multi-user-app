@@ -6,12 +6,19 @@ namespace BlazorMultiUser.Web.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : IdentityDbContext<ApplicationUser>(options)
 {
+    public required DbSet<UserCount> UserCounts { get; set; }
     public required DbSet<Group> Groups { get; set; }
     public required DbSet<TaskToDo> TasksToDo { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasOne(uc => uc.UserCount)
+            .WithOne(u => u.User)
+            .HasForeignKey<UserCount>(uc => uc.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Group>()
             .HasOne(g => g.Owner)

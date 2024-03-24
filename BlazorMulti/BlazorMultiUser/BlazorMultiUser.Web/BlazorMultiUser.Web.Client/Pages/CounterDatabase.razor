@@ -1,0 +1,106 @@
+﻿@attribute [Route(Navigation.Url.CounterDatabase)]
+@using BlazorMultiUser.Shared.Infrastructure
+@using BlazorMultiUser.Shared
+@using BlazorMultiUser.Shared.Features.Counter
+@using BlazorMultiUser.Shared.Features.Counter.Dto
+@rendermode InteractiveAuto
+@inject IAppContextService AppContextService
+@inject ICounterReaderService CounterReaderService
+@inject ICounterWriterService CounterWriterService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Counter Database</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    @(_isServerSideRender ? "Server Rendered" : "Client Rendered")
+</div>
+
+<h1>Counter Database</h1>
+
+@if (!_isUserAuthenticated)
+{
+    <p>You are not authenticated.</p>
+    <p>Authenticate to see your count.</p>
+    <a href="@Navigation.Url.AccountLogin" class="btn btn-primary">Login</a>
+    <a href="@Navigation.Url.AccountRegister" class="btn btn-primary">Register</a>
+}
+else
+{
+    <p role="status">Current count (database): @(_currentCountDatabase)</p>
+
+    <p>Source: @_counterDatabaseSource</p>
+
+    <button class="btn btn-primary" @onclick="IncrementCounts" disabled="@_isLoading">Increment counts</button>
+    <button class="btn btn-danger" @onclick="ClearCounts" disabled="@_isLoading">Clear counts</button>
+}
+
+@if (_isLoading)
+{
+    <p>Loading...</p>
+}
+
+@code {
+
+    private bool _isLoading = true;
+    private bool _isUserAuthenticated = false;
+
+    private int _currentCountDatabase;
+    private bool _isServerSideRender = true;
+
+    private string _counterDatabaseSource = "None yet";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _isLoading = true;
+        _isServerSideRender = AppContextService.IsServerSideRender;
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            _isUserAuthenticated = true;
+            _counterDatabaseSource = $"Reading from {(CounterReaderService.IsServerSide ? "server" : "client")}";
+            var res = await CounterReaderService.GetCounterForCurrentUser();
+            if (res is Result<UserCountDto>.Success success)
+            {
+                _currentCountDatabase = success.Value.Counter;
+            }
+        }
+
+        _isLoading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        _isServerSideRender = AppContextService.IsServerSideRender;
+        if (firstRender)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task IncrementCounts()
+    {
+        _isLoading = true;
+        var res =  await CounterWriterService.UpdateCounterForCurrentUser(new UpdateCountRequest(_currentCountDatabase + 1));
+        if (res is Result<UserCountDto>.Success success)
+        {
+            _currentCountDatabase = success.Value.Counter;
+        }
+        _isLoading = false;
+    }
+
+    private async Task ClearCounts()
+    {
+        _isLoading = true;
+        var res = await CounterWriterService.UpdateCounterForCurrentUser(new UpdateCountRequest(0));
+        if (res is Result<UserCountDto>.Success success)
+        {
+            _currentCountDatabase = success.Value.Counter;
+        }
+        _isLoading = false;
+    }
+}

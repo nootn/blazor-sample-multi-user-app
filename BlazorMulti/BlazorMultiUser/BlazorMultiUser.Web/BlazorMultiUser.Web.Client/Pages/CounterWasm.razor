@@ -1,5 +1,6 @@
-﻿@page "/counter-wasm"
+﻿@attribute [Route(Navigation.Url.CounterClientWasm)]
 @using BlazorMultiUser.Shared.Infrastructure
+@using BlazorMultiUser.Shared
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @inject IAppContextService AppContextService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
@@ -10,15 +11,17 @@
     @(_isServerSideRender ? "Server Rendered" : "Client Rendered")
 </div>
 
-<h1>Counter</h1>
+<h1>Counter WASM</h1>
 
-<p role="status">Current count: @_currentCount</p>
+<p role="status">Current count (page): @_currentCountPage</p>
+<p role="status">Current count (local storage): @_currentCountLocal</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Increment count</button>
-<button class="btn btn-danger" @onclick="ClearCount">Clear count</button>
+<button class="btn btn-primary" @onclick="IncrementCounts">Increment counts</button>
+<button class="btn btn-danger" @onclick="ClearCounts">Clear counts</button>
 
 @code {
-    private int _currentCount;
+    private int _currentCountPage;
+    private int _currentCountLocal;
     private bool _isServerSideRender = true;
 
     private const string LocalStorageKey = "currentCount";
@@ -27,18 +30,20 @@
     {
         await base.OnInitializedAsync();
         _isServerSideRender = AppContextService.IsServerSideRender;
-        _currentCount = await LocalStorage.GetItemAsync<int>(LocalStorageKey);
+        _currentCountLocal = await LocalStorage.GetItemAsync<int>(LocalStorageKey);
     }
 
-    private async Task IncrementCount()
+    private async Task IncrementCounts()
     {
-        _currentCount++;
-        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCount);
+        _currentCountPage++;
+        _currentCountLocal++;
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
     }
 
-    private async Task ClearCount()
+    private async Task ClearCounts()
     {
-        _currentCount = 0;
-        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCount);
+        _currentCountPage = 0;
+        _currentCountLocal = 0;
+        await LocalStorage.SetItemAsync(LocalStorageKey, _currentCountLocal);
     }
 }

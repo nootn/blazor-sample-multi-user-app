@@ -24,4 +24,7 @@ public class Group
     public ICollection<ApplicationUser> Assignees { get; set; } = [];
 
     public ICollection<TaskToDo> Tasks { get; set; } = [];
+
+    [Timestamp]
+    public required byte[] RowVersion { get; set; }
 }

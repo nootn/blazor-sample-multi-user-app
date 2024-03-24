@@ -1,4 +1,5 @@
 ﻿using BlazorMultiUser.Shared.Features.GroupsAndTasks.Dto;
+using BlazorMultiUser.Shared.Infrastructure;
 
 namespace BlazorMultiUser.Shared.Features.GroupsAndTasks;
 
@@ -7,5 +8,5 @@ namespace BlazorMultiUser.Shared.Features.GroupsAndTasks;
 /// </summary>
 public interface IGroupsAndTasksReaderService : IServiceCommon
 {
-    Task<IEnumerable<GroupCoreDto>> GetAllGroups();
+    Task<Result<IEnumerable<GroupCoreDto>>> GetAllGroups();
 }

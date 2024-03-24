@@ -1,5 +1,6 @@
 ﻿using BlazorMultiUser.Shared.Validation;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorMultiUser.Web.Data;
@@ -22,4 +23,7 @@ public class TaskToDo
     public ICollection<ApplicationUser> Assignees { get; set; } = [];
 
     public ICollection<Group> Groups { get; set; } = [];
+
+    [Timestamp]
+    public required byte[] RowVersion { get; set; }
 }

@@ -5,22 +5,22 @@ namespace BlazorMultiUser.Web.Infrastructure;
 
 public static class ResultExtensions
 {
-    public static IActionResult ToWebResponse<T>(this Result<T> result)
+    public static ActionResult<T> ToWebResponse<T>(this Result<T> result)
     {
         return result.ToWebResponse(
             value => new OkObjectResult(value),
-            errors => new BadRequestObjectResult(new ValidationProblemDetails(errors)));
+            errors => new BadRequestObjectResult(new ServerValidationProblems(errors)));
     }
 
-    public static IActionResult ToWebResponse<T>(this Result<T> result, Func<T, IActionResult> success)
+    public static ActionResult<T> ToWebResponse<T>(this Result<T> result, Func<T, ActionResult<T>> success)
     {
         return result.ToWebResponse(
             success,
-            errors => new BadRequestObjectResult(new ValidationProblemDetails(errors)));
+            errors => new BadRequestObjectResult(new ServerValidationProblems(errors)));
     }
 
-    public static IActionResult ToWebResponse<T>(this Result<T> result, Func<T, IActionResult> success,
-        Func<IDictionary<string, string[]>, IActionResult> invalid)
+    public static ActionResult<T> ToWebResponse<T>(this Result<T> result, Func<T, ActionResult<T>> success,
+        Func<IDictionary<string, string[]>, ActionResult<T>> invalid)
     {
         return result switch
         {
@@ -30,7 +30,7 @@ public static class ResultExtensions
         };
     }
 
-    public static async Task<IActionResult> ToWebResponse<T>(this Task<Result<T>> resultTask)
+    public static async Task<ActionResult<T>> ToWebResponse<T>(this Task<Result<T>> resultTask)
     {
         var result = await resultTask;
         return result.ToWebResponse();

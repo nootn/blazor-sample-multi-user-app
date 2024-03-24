@@ -4,6 +4,7 @@ using BlazorMultiUser.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorMultiUser.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240322123415_UserCounts")]
+    partial class UserCounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,12 +67,6 @@ namespace BlazorMultiUser.Web.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -109,12 +106,6 @@ namespace BlazorMultiUser.Web.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.HasKey("GroupId");
 
                     b.HasIndex("OwnerId");
@@ -141,12 +132,6 @@ namespace BlazorMultiUser.Web.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.HasKey("TaskToDoId");
 
                     b.HasIndex("OwnerId");
@@ -163,12 +148,6 @@ namespace BlazorMultiUser.Web.Migrations
                     b.Property<int>("Counter")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(450)
@@ -176,8 +155,7 @@ namespace BlazorMultiUser.Web.Migrations
 
                     b.HasKey("UserCountId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserCounts");
                 });
@@ -385,9 +363,9 @@ namespace BlazorMultiUser.Web.Migrations
             modelBuilder.Entity("BlazorMultiUser.Web.Data.UserCount", b =>
                 {
                     b.HasOne("BlazorMultiUser.Web.Data.ApplicationUser", "User")
-                        .WithOne("UserCount")
-                        .HasForeignKey("BlazorMultiUser.Web.Data.UserCount", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -494,8 +472,6 @@ namespace BlazorMultiUser.Web.Migrations
                     b.Navigation("OwnedGroups");
 
                     b.Navigation("OwnedTasks");
-
-                    b.Navigation("UserCount");
                 });
 #pragma warning restore 612, 618
         }

@@ -82,7 +82,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _groups = await GroupTasksReaderService.GetAllGroups();
+        await RefreshGroups();
     }
 
     public async Task CreateGroup()
@@ -91,7 +91,7 @@ else
         var res = await GroupTaskWriterService.CreateGroup(CreateGroupRequestModel);
         if (res is Result<CreateGroupRequest>.Success)
         {
-            _groups = await GroupTasksReaderService.GetAllGroups();
+            await RefreshGroups();
         }
         else if (res is Result<CreateGroupRequest>.Invalid failure)
         {
@@ -101,6 +101,16 @@ else
         {
             createGroupErrorMessage = "Unexpected error creating group - please try again";
         }
+    }
+
+    private async Task RefreshGroups()
+    {
+        var res = await GroupTasksReaderService.GetAllGroups();
+        if (res is Result<IEnumerable<GroupCoreDto>>.Success success)
+        {
+            _groups = success.Value;
+        }
+        //TODO: handle errors
     }
 
 }
