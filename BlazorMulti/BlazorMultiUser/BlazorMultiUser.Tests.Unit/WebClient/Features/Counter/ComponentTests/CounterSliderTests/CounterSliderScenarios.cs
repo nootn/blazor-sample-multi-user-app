@@ -1,12 +1,13 @@
 ﻿using System.Reflection;
 using BlazorMultiUser.Web.Client.Features.Counter.Components;
 using Bunit;
+using FluentAssertions;
 using Microsoft.AspNetCore.Components;
 using Xunit.Sdk;
 
-namespace BlazorMultiUser.Tests.Unit.WebClient.Features.Counter.ComponentTests;
+namespace BlazorMultiUser.Tests.Unit.WebClient.Features.Counter.ComponentTests.CounterSliderTests;
 
-public class CounterSliderTests
+public class CounterSliderScenarios
 {
     public class CounterSliderTest
     {
@@ -72,10 +73,19 @@ public class CounterSliderTests
         {
             using var ctx = new TestContext();
 
+            var valueChangedCalled = false;
+            var valueChangedValue = 0;
+            var valueChangedCallback = EventCallback.Factory.Create<int>(this, value =>
+            {
+                valueChangedCalled = true;
+                valueChangedValue = value;
+            });
+
             var cut = ctx.RenderComponent<CounterSlider>(builder =>
             {
                 builder.Add(p => p.Value, 50);
                 builder.Add(p => p.Debounce, false);
+                builder.Add(p => p.ValueChanged, valueChangedCallback);
             });
             var inputElement = cut.Find("input");
             inputElement.Change("75");
@@ -83,6 +93,9 @@ public class CounterSliderTests
             cut.MarkupMatches(
                 GetExpectedMarkupFromEmbeddedResource(
                     $"{GetType().Namespace}.{nameof(ValueChangeWhenNoDebounceRendersInstantly)}.html"));
+
+            valueChangedCalled.Should().BeTrue();
+            valueChangedValue.Should().Be(75);
         }
 
         [Fact]
@@ -113,13 +126,13 @@ public class CounterSliderTests
                 GetExpectedMarkupFromEmbeddedResource(
                     $"{GetType().Namespace}.{nameof(ValueChangeWhenDebounceRendersAfterInterval)}.html"));
 
-            Assert.False(valueChangedCalled);
-            Assert.Equal(0, valueChangedValue);
+            valueChangedCalled.Should().BeFalse();
+            valueChangedValue.Should().Be(0);
 
             await Task.Delay(51);
 
-            Assert.True(valueChangedCalled);
-            Assert.Equal(75, valueChangedValue);
+            valueChangedCalled.Should().BeTrue();
+            valueChangedValue.Should().Be(75);
         }
 
 

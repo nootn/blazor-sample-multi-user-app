@@ -6,3 +6,7 @@
 public static class AssemblyMarkerServer
 {
 }
+
+public class AssemblyMarkerServerProgram
+{
+}

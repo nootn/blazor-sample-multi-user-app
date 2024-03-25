@@ -27,11 +27,11 @@
             <DataAnnotationsValidator/>
             <h2>Create a new account.</h2>
             <hr/>
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" role="alert" data-field="@PageObject.ValidationSummaryDataField" />
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" data-field="@PageObject.Email.InputDataField" />
                 <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger"/>
+                <ValidationMessage For="() => Input.Email" class="text-danger" data-field="@PageObject.Email.InlineValidationDataField" />
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password"/>
@@ -43,7 +43,7 @@
                 <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger"/>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary" data-field="@PageObject.RegisterSubmitButtonDataField">Register</button>
         </EditForm>
     </div>
     <div class="col-md-6 col-md-offset-2">
@@ -128,8 +128,8 @@
 
     private sealed class InputModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = PageObject.Email.ValidationRequiredMessage)]
+        [EmailAddress(ErrorMessage = PageObject.Email.ValidationFormatMessage)]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
 
@@ -143,6 +143,23 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+    }
+
+
+    public static class PageObject
+    {
+        public static readonly string ValidationSummaryDataField = "val-sum";
+        public static readonly string RegisterSubmitButtonDataField = "btn-sub";
+
+        public static class Email
+        {
+            public static readonly string InputDataField = "email-in";
+            public static readonly string InlineValidationDataField = "email-val";
+
+            public const string ValidationRequiredMessage = "You must enter an email address.";
+            public const string ValidationFormatMessage = "You must enter a valid email address.";
+        }
+
     }
 
 }

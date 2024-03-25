@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorMultiUser.Shared", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorMultiUser.Tests.Unit", "BlazorMultiUser.Tests.Unit\BlazorMultiUser.Tests.Unit.csproj", "{7C8DDF82-6701-4248-9FA6-3801838F025A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorMultiUser.Tests.EndToEnd", "BlazorMultiUser.Tests.EndToEnd\BlazorMultiUser.Tests.EndToEnd.csproj", "{8BBD59A9-8639-42F7-979B-0A81581164D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMultiUser.Tests.Integration", "BlazorMultiUser.Tests.Integration\BlazorMultiUser.Tests.Integration.csproj", "{9A554032-8F14-444A-8E1E-5E17BC8259A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{7C8DDF82-6701-4248-9FA6-3801838F025A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C8DDF82-6701-4248-9FA6-3801838F025A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C8DDF82-6701-4248-9FA6-3801838F025A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BBD59A9-8639-42F7-979B-0A81581164D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BBD59A9-8639-42F7-979B-0A81581164D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BBD59A9-8639-42F7-979B-0A81581164D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BBD59A9-8639-42F7-979B-0A81581164D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A554032-8F14-444A-8E1E-5E17BC8259A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A554032-8F14-444A-8E1E-5E17BC8259A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A554032-8F14-444A-8E1E-5E17BC8259A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A554032-8F14-444A-8E1E-5E17BC8259A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
