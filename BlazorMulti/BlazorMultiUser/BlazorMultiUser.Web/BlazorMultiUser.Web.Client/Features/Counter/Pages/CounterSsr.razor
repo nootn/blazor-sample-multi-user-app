@@ -36,7 +36,7 @@
     {
         await base.OnInitializedAsync();
         _isServerSideRender = AppContextService.IsServerSideRender;
-        //_currentCountLocal = await LocalStorage.GetItemAsync<int>(LocalStorageKey); //JS error
+        //_currentCountLocal = await LocalStorage.GetItemAsync<int>(ClientCounterState.LocalStorageKey); //JS error
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
