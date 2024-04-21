@@ -1,6 +1,5 @@
 ﻿using BlazorMultiUser.Shared.Features.GroupsAndTasks.Dto;
 using BlazorMultiUser.Shared.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorMultiUser.Shared.Features.GroupsAndTasks;
 
