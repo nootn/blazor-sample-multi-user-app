@@ -4,7 +4,11 @@
 
 <PageTitle>Access denied</PageTitle>
 
-<header>
-    <h1 class="text-danger">Access denied</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
-</header>
+<FluentCard Width="320px" Height="120px">
+    <h1>Access denied</h1>
+    <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" >
+        <FluentIcon Value="@(new Icons.Regular.Size16.Warning())" Color="Color.Warning" />
+        <span>You do not have access to this resource.</span>
+    </FluentStack>
+    
+</FluentCard>

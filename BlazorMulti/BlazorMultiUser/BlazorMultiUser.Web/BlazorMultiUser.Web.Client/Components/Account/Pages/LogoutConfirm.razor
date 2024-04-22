@@ -1,0 +1,30 @@
+﻿@using BlazorMultiUser.Shared
+@attribute [Route(Navigation.Url.AccountLogoutConfirm)]
+@rendermode InteractiveAuto
+
+@inject ILogger<LogoutConfirm> Logger
+@inject NavigationManager NavigationManager
+
+<PageTitle>Log out</PageTitle>
+
+<h1>Are you sure you want to log out?</h1>
+
+<form action="@Navigation.Url.AccountLogout" method="post">
+    <AntiforgeryToken/>
+    <input type="hidden" name="ReturnUrl" value="@($"{ReturnUrl}")"/>
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Yes</FluentButton>
+        <FluentButton Type="ButtonType.Button" OnClick="GoBack" Appearance="Appearance.Outline">No</FluentButton>
+    </FluentStack>
+</form>
+
+@code {
+
+    [Parameter, SupplyParameterFromQuery] public string ReturnUrl { get; set; } = "";
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/{ReturnUrl}");
+    }
+
+}

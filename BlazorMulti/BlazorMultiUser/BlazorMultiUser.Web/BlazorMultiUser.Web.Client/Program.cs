@@ -3,9 +3,9 @@ using BlazorMultiUser.Web.Client;
 using BlazorMultiUser.Web.Client.Infrastructure.Fluxor;
 using BlazorMultiUser.Web.Client.Infrastructure.Ioc;
 using Fluxor;
-using Fluxor.Blazor.Web.ReduxDevTools;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -19,6 +19,8 @@ builder.Services.AddScoped<HttpClient>(sp =>
     {
         BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
     });
+
+builder.Services.AddFluentUIComponents();
 
 builder.Services.UseSharedClientSide();
 

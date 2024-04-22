@@ -34,6 +34,8 @@ public static class Navigation
         public const string AccountResendEmailConfirmation = "/Account/ResendEmailConfirmation";
         public const string AccountResetPassword = "/Account/ResetPassword";
         public const string AccountResetPasswordConfirmation = "/Account/ResetPasswordConfirmation";
+        public const string AccountLogoutConfirm = "/Account/LogoutConfirm";
+        public const string AccountLogout = "/Account/Logout";
         public const string Error = "/Error";
         public const string Home = "/";
         public const string CounterClientWasm = "/counter-client-wasm";

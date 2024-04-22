@@ -11,14 +11,17 @@ using Fluxor.Blazor.Web.ReduxDevTools;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.FluentUI.AspNetCore.Components;
 using _Imports = BlazorMultiUser.Web.Client._Imports;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//If we ever need a httpclient, register it before FluentUIComponents
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddFluentUIComponents();
 
 builder.Services.AddControllers();
 

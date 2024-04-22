@@ -3,109 +3,58 @@
 
 @inject NavigationManager NavigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorMultiUser.Web</a>
-    </div>
-</div>
+<div class="navmenu">
+    <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
+    <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
+    <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
+        <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" @bind-Expanded="_expanded">
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
+            <FluentNavGroup Expanded="true" Icon="@(new Icons.Regular.Size20.NumberSymbol())">
+                <TitleTemplate>Counters</TitleTemplate>
+                <ChildContent>
+                    <FluentNavLink Href="@Navigation.Url.CounterClientWasm" Icon="@(new Icons.Regular.Size20.NumberCircle1())" IconColor="Color.Accent">Counter</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterDatabaseDefault" Icon="@(new Icons.Regular.Size20.NumberCircle2())" IconColor="Color.Accent">Counter DB (Default)</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterDatabasePersist" Icon="@(new Icons.Regular.Size20.NumberCircle3())" IconColor="Color.Accent">Counter DB (Persist)</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterFluxor" Icon="@(new Icons.Regular.Size20.NumberCircle4())" IconColor="Color.Accent">Counter Fluxor</FluentNavLink>
+                </ChildContent>
+            </FluentNavGroup>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
+            <FluentNavLink Href="@Navigation.Url.Reports" Icon="@(new Icons.Regular.Size20.Gauge())" IconColor="Color.Accent">Reports</FluentNavLink>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@Navigation.Url.CounterClientWasm">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter WASM
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@Navigation.Url.CounterClientSsr">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter SSR
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@Navigation.Url.CounterDatabaseDefault">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter DB (Default)
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@Navigation.Url.CounterDatabasePersist">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter DB (Persist)
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@Navigation.Url.CounterFluxor">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter Fluxor
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@Navigation.Url.Reports">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Reports
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
-        </div>
-
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken/>
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+            <FluentNavGroup Expanded="true" Icon="@(new Icons.Regular.Size20.LockShield())">
+                <TitleTemplate>Security</TitleTemplate>
+                <ChildContent>
+                    <FluentNavLink Href="@Navigation.Url.Auth" Icon="@(new Icons.Regular.Size20.LockShield())" IconColor="Color.Info">Auth Check</FluentNavLink>
+                    <AuthorizeView>
+                        <Authorized>
+                            <FluentNavLink Href="@Navigation.Url.AccountManage" Icon="@(new Icons.Regular.Size24.Person())" IconColor="Color.Info">@context.User.Identity?.Name</FluentNavLink>
+                            <FluentNavLink Href="@($"{Navigation.Url.AccountLogoutConfirm}?returnUrl={Uri.EscapeDataString(_currentUrl ?? "/")}")" Icon="@(new Icons.Filled.Size12.ArrowLeft())" IconColor="Color.Warning">Logout</FluentNavLink>
+                        </Authorized>
+                        <NotAuthorized>
+                            <FluentNavLink Href="@Navigation.Url.AccountRegister" Icon="@(new Icons.Regular.Size24.Person())" IconColor="Color.Success">Register</FluentNavLink>
+                            <FluentNavLink Href="@Navigation.Url.AccountLogin" Icon="@(new Icons.Filled.Size20.PersonAccounts())" IconColor="Color.Success">Login</FluentNavLink>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </ChildContent>
+            </FluentNavGroup>
+        </FluentNavMenu>
     </nav>
 </div>
 
 @code {
-    private string? currentUrl;
+    private bool _expanded = true;
+
+    private string? _currentUrl;
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        _currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 
@@ -113,5 +62,4 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-
 }
