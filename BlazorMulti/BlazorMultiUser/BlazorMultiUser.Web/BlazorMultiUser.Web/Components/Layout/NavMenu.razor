@@ -8,20 +8,20 @@
     <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" @bind-Expanded="_expanded">
-            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
-            <FluentNavGroup Expanded="true" Icon="@(new Icons.Regular.Size20.NumberSymbol())">
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home().WithColor(ThemeInfo.DefaultTheme))" IconColor="Color.Custom">Home</FluentNavLink>
+            <FluentNavGroup Expanded="true" Icon="@(new Icons.Regular.Size20.NumberSymbol().WithColor(ThemeInfo.CounterTheme))" IconColor="Color.Custom">
                 <TitleTemplate>Counters</TitleTemplate>
                 <ChildContent>
-                    <FluentNavLink Href="@Navigation.Url.CounterClientWasm" Icon="@(new Icons.Regular.Size20.NumberCircle1())" IconColor="Color.Accent">Counter</FluentNavLink>
-                    <FluentNavLink Href="@Navigation.Url.CounterDatabaseDefault" Icon="@(new Icons.Regular.Size20.NumberCircle2())" IconColor="Color.Accent">Counter DB (Default)</FluentNavLink>
-                    <FluentNavLink Href="@Navigation.Url.CounterDatabasePersist" Icon="@(new Icons.Regular.Size20.NumberCircle3())" IconColor="Color.Accent">Counter DB (Persist)</FluentNavLink>
-                    <FluentNavLink Href="@Navigation.Url.CounterFluxor" Icon="@(new Icons.Regular.Size20.NumberCircle4())" IconColor="Color.Accent">Counter Fluxor</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterClientWasm" Icon="@(new Icons.Regular.Size20.NumberCircle1().WithColor(ThemeInfo.CounterTheme))" IconColor="Color.Custom">Counter</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterDatabaseDefault" Icon="@(new Icons.Regular.Size20.NumberCircle2().WithColor(ThemeInfo.CounterTheme))" IconColor="Color.Custom">Counter DB (Default)</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterDatabasePersist" Icon="@(new Icons.Regular.Size20.NumberCircle3().WithColor(ThemeInfo.CounterTheme))" IconColor="Color.Custom">Counter DB (Persist)</FluentNavLink>
+                    <FluentNavLink Href="@Navigation.Url.CounterFluxor" Icon="@(new Icons.Regular.Size20.NumberCircle4().WithColor(ThemeInfo.CounterTheme))" IconColor="Color.Custom">Counter Fluxor</FluentNavLink>
                 </ChildContent>
             </FluentNavGroup>
 
-            <FluentNavLink Href="@Navigation.Url.Reports" Icon="@(new Icons.Regular.Size20.Gauge())" IconColor="Color.Accent">Reports</FluentNavLink>
+            <FluentNavLink Href="@Navigation.Url.Reports" Icon="@(new Icons.Regular.Size20.Gauge().WithColor(ThemeInfo.DefaultTheme))" IconColor="Color.Custom">Reports</FluentNavLink>
 
-            <FluentNavGroup Expanded="true" Icon="@(new Icons.Regular.Size20.LockShield())">
+            <FluentNavGroup Expanded="true" Icon="@(new Icons.Regular.Size20.LockShield())" IconColor="Color.Neutral">
                 <TitleTemplate>Security</TitleTemplate>
                 <ChildContent>
                     <FluentNavLink Href="@Navigation.Url.Auth" Icon="@(new Icons.Regular.Size20.LockShield())" IconColor="Color.Info">Auth Check</FluentNavLink>
@@ -43,7 +43,7 @@
 
 @code {
     private bool _expanded = true;
-
+    
     private string? _currentUrl;
 
     protected override void OnInitialized()
